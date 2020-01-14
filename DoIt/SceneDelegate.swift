@@ -51,6 +51,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         //gets called when the application goes to the background.
         print("applicationDidEnterBackground")
+        
+        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
 
 

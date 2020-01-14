@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -35,7 +36,44 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
+    
+    // MARK: - Core Data stack
+        
+    //lazy: it is a variable that gets loaded with value only when it is needed. When this variable is used then only it gets a value. Memory efficient.
+    
+        lazy var persistentContainer: NSPersistentContainer = {
+            
+            //we create a new NSPersistentContainer using our own data model called "DataModel"
+            // this is a SQLite database that we will be saving our data to.
+            let container = NSPersistentContainer(name: "DataModel")
+            container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error as NSError? {
+                    
+                fatalError("Unresolved error \(error), \(error.userInfo)")
+            }
+            })
+            return container
+        }()
 
+        // MARK: - Core Data Saving support
+
+        func saveContext () {
+            // and then we have a context area where we modify and play around with the data before saving it ot the database
+            let context = persistentContainer.viewContext
+            if context.hasChanges {
+                do {
+                    try context.save()    // finally save the data
+                } catch {
+                    
+                    let nserror = error as NSError
+                    fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+                }
+            }
+        }
 
 }
+
+
+
+
 
